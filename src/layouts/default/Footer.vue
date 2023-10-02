@@ -4,11 +4,24 @@
 
     <div>
         <v-row>
-            <v-col cols="12" sm="6" md="4">
-                <h3>Contact Us</h3>
-                <p>Email: contact@example.com</p>
-                <p>Phone: +1 (123) 456-7890</p>
-            </v-col>
+            <v-col cols="12" sm="8" md="6" lg="4" >
+                <div >
+                  <h3>Subscribe to our Newsletter</h3>
+                  
+                </div>
+                <v-row  class="mt-4">
+                  <v-col cols="12" sm="10">
+                    <v-text-field v-model="email" label="Email"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="8">
+                    <v-btn class="mt-2" color="bg-blue-grey-lighten-4"  @click="subscribe">Subscribe</v-btn>
+                  </v-col>
+                </v-row>
+              </v-col>
+            <div>
+                
+            </div>
+            <v-spacer></v-spacer>
 
             <v-col cols="12" sm="6" md="4">
                 <h3>Quick Links</h3>
@@ -18,6 +31,7 @@
                     <li><a href="#">Privacy Policy</a></li>
                 </ul>
             </v-col>
+           
 
             <v-col cols="12" md="4">
                 <h3>Follow Us</h3>

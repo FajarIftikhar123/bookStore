@@ -1,4 +1,6 @@
-<template>
+<template>    
+    <!-- Here is the brief summary of this component. Using 2 different fiels as a user information
+    There is API integration from backend side so user can login if they have a account -->
 <div class=".center-card {
       display: flex;
       justify-content: center;
@@ -15,8 +17,11 @@
         <v-sheet width="300" class="mx-auto">
             <v-form @submit.prevent>
                 <v-text-field v-model="email" type="email" :rules="emailRules" label="Email"></v-text-field>
-                <v-text-field v-model="password" type="passward" :rules="passwordRules" label="Passward"></v-text-field>
+                <v-text-field v-model="password" type="password" :rules="passwordRules" label="Passward"></v-text-field>
                 <v-btn @click="login" type="submit" block class="mt-2">Submit</v-btn>
+                <p class="text-center pt-5"> Don't have an account?
+                    <router-link to="/signup">Sign Up</router-link>
+                </p>
             </v-form>
         </v-sheet>
     </v-card>
@@ -26,10 +31,19 @@
 <script>
 import axios from 'axios'
 export default {
-    data: () => ({
-        email: '',
-        password: '',
-//JAVASCRIPT VALIDATIONS
+    name:"Login",
+   
+    data() {
+        return{
+
+        email: "",
+        password: "",
+        users:[],
+        };
+        
+    },
+        
+        //JAVASCRIPT VALIDATIONS
         passwordRules: [
             (v) => !!v || "Password is required",
             (v) => (v && v.length >= 8) || "Password must be at least 8 characters",
@@ -41,20 +55,29 @@ export default {
             (v) => !!v || "E-mail is required.",
             (v) => /.+@.+\..+/.test(v) || "E-mail must be valid.",
         ],
-    }),
+
     methods: {
         async login() {
-            console.warn("signup", this.name, this.email, this.password)
-            let result = await axios.get("http://10.0.10.216:80/api/register", {
-                name: this.name,
+            try {
+                // console.warn("login", this.email, this.password)
+            let result = await axios.post("http://10.0.10.220:8080/api/login", {
                 email: this.email,
-                password: this.password
+                password: this.password,
+
             });
-            console.warn(result);
-            if (result.status == 200) {
-                this.$router.push({
-                    name: "home"
-                })
+           
+            // extract token from result
+
+            if (result.data.message == "Login Successful") {
+                this.$router.push("/home")
+            }
+            const token=result.data.token;
+          
+            localStorage.setItem('token', JSON.stringify(token));
+
+                
+            } catch (error) {
+                console.log(error)
             }
 
         }
@@ -63,7 +86,6 @@ export default {
 </script>
 
 <style scoped>
-
 .mx-auto {
     margin-left: auto;
     margin-right: auto;
@@ -73,7 +95,6 @@ export default {
     margin-top: 5rem;
     margin-bottom: 5rem;
 }
-
 .center-card {
     display: flex;
     justify-content: center;
