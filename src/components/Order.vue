@@ -43,7 +43,7 @@
 
   
 <script>
-import AdminDashboard from './AdminDashboard.vue';
+// import AdminDashboard from '@/components/AdminDashboard.vue';
 export default {
     // name:"AdminDashboard",
     // components:

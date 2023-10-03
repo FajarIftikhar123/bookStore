@@ -16,10 +16,12 @@
         class="rounded-pill custom-search-bar"></v-text-field>
 
     <v-spacer></v-spacer>
-    <router-link to="addtocart/:bookId">
+    <router-link to="/addtocart/:bookId">
         <v-btn ><v-icon title="Cart" color="white">mdi-cart</v-icon></v-btn>
        </router-link>
-       <v-btn ><v-icon title="Your Wishlist">mdi-heart</v-icon></v-btn>
+       <router-link to="/whislist">
+       <v-btn color="white"><v-icon title="Your Wishlist">mdi-heart</v-icon></v-btn>
+    </router-link>
     <router-link to="/home">
         <v-btn text class="text-yellow">Home</v-btn>
     </router-link>

@@ -1,67 +1,110 @@
 <template>
-    <div>
-      <h2>Your Cart</h2>
-      <v-table>
+<div>
+    <v-table>
         <thead>
-          <tr>
-            <th>Image</th>
-            <th>Book Name</th>
-            <th>Quantity</th>
-            <th>Delete</th>
-          </tr>
+            <tr>
+                <th class="text-left">Image</th>
+                <th class="text-left">Product</th>
+                <th class="text-left">Price</th>
+                <th class="text-left">Quantity</th>
+                <th class="text-left">Total</th>
+                <th class="text-left">Action</th>
+            </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in cartItems" :key="index">
-            <td><img :src="item.book.image" alt="Book Image" /></td>
-            <td>{{ item.book.name }}</td>
-            <td>
-              <input type="number" v-model="item.quantity" @change="updateQuantity(index)" />
-            </td>
-            <td>
-              <v-icon @click="removeItem(index)">mdi-delete</v-icon>
-            </td>
-          </tr>
+            <tr v-for="(item, index) in cart" :key="index">
+                <td>
+                    <img :src="item.cover_image" alt="Product Image" width="100" />
+                </td>
+
+                <td>{{ item.title }}</td>
+                <td>{{ item.price }}</td>
+                <td>
+                    <div class="quantity-control">
+                        <v-btn @click="decreaseQuantity(item)">-</v-btn>
+                        <div class=" quantity ">{{  item.quantity  }}</div>
+                        <v-btn @click="increaseQuantity(item)">+</v-btn>
+                    </div>
+                </td>
+                <td>{{ item.price * item.quantity }}</td>
+                <td>
+                    <v-icon @click="deleteItem(index)">mdi-delete</v-icon>
+                </td>
+            </tr>
         </tbody>
-      </v-table>
+    </v-table>
+    <div class="d-flex justify-center">
+    <v-card class="payment-container" max-width="400px" max-height="350px" variant="tonal">
+        <v-card-text>
+          <div>SubTotal: {{ calculateSubtotal() }}</div>
+          <div>Total: {{ calculateTotal() }}</div>
+          <v-btn @click="checkPayment" color="primary">Payment</v-btn>
+          <p>Only Cash</p>
+        </v-card-text>
+      </v-card>
     </div>
-  </template>
-  
-  <script>
-  import axios from 'axios'
-  export default {
-    
+</div>
+</template>
+<script>
+export default {
+    name:"Cart",
     data() {
-      return {
-        book: null,
-      };
+        return {
+            cart: [],
+        };
     },
-    async mounted() {
-      const bookId = this.$route.params.bookId;
-  
-      try {
-        const response = await axios.get(`http://10.0.10.220:8080/api/book/${bookId}`);
-        this.book = response.data.book;
-      } catch (error) {
-        console.error('Error fetching book details:', error);
-      }
+    mounted() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        this.cart = cart;
     },
-    // props: {
-    //   cartItems: Array, // Array of cart items with book and quantity
-    // },
     methods: {
-      updateQuantity(index) {
-       
-        this.$emit('update-quantity', index, this.cartItems[index].quantity);
-      },
-      removeItem(index) {
-       
-        this.$emit('remove-item', index);
-      },
+        increaseQuantity(item) {
+            item.quantity++;
+            localStorage.setItem('cart', JSON.stringify(this.cart));
+        },
+        decreaseQuantity(item) {
+            if (item.quantity > 1) {
+                item.quantity--;
+                localStorage.setItem('cart', JSON.stringify(this.cart));
+            }
+        },
+        deleteItem(index) {
+            this.cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(this.cart));
+
+        },
+        calculateSubtotal() {
+            return this.cart.reduce((total, item) => total + item.price * item.quantity, 0);
+        },
+
+        calculateTotal() {
+            const subtotal = this.calculateSubtotal();
+            return subtotal;
+        },
+
+        checkPayment() {
+            alert('Done!');
+        },
+
     },
-  };
-  </script>
+
+};
+</script>
+
   
-  <style scoped>
- 
-  </style>
-  
+<style scoped>
+.quantity-control {
+
+    display: flex;
+    align-items: center;
+
+}
+.payment-container {
+    margin-top: 20px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+   
+  }
+</style>

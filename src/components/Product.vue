@@ -89,11 +89,9 @@ export default {
     max-width: 300px;
     margin: 0 auto;
 }
-
 .v-card-text {
     padding: 10px;
 }
-
 .style-dialog {
     background-color: #fff;
     max-width: "100px";
